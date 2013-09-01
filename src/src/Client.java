@@ -36,8 +36,8 @@ public class Client {
 			final HtmlPasswordInput password = form.getInputByName("pswd");
 			final HtmlSubmitInput submit = form.getInputByName("ok");
 
-			identifier.setValueAttribute("REMYB");
-			password.setValueAttribute("HORN2296");
+			identifier.setValueAttribute("idealwineapi");
+			password.setValueAttribute("idealwineapi");
 
 			final HtmlPage page2 = submit.click();
 			htmlStr = page2.asText();
