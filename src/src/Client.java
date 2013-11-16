@@ -2,7 +2,6 @@ package src;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
