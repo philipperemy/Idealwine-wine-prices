@@ -21,13 +21,13 @@ public class MultithreadedClient
         }
     }
 
-    public synchronized HtmlPage getHtmlPage(String wineName, String millesime, String content)
+    public synchronized HtmlPage getHtmlPage(String wineId, String millesime, String content, String wineName)
     {
 
         HtmlPage htmlPage = null;
         try
         {
-            htmlPage = Client.getHtmlPage(webClient, wineName, millesime, content);
+            htmlPage = Client.getHtmlPage(webClient, wineId, millesime, content, wineName);
         }
         catch (Exception e)
         {

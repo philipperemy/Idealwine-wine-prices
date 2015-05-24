@@ -58,10 +58,10 @@ public class Client
         return client;
     }
 
-    public static HtmlPage getHtmlPage(WebClient client, String wineName, String millesime, String size) throws FailingHttpStatusCodeException, MalformedURLException, IOException
+    public static HtmlPage getHtmlPage(WebClient client, String wineId, String millesime, String size, String wineName) throws FailingHttpStatusCodeException, MalformedURLException, IOException
     {
-
-        return client.getPage(URLMaker.create(wineName, millesime, size));
+    	String url = URLMaker.create(wineId, millesime, size, wineName);
+        return client.getPage(url);
 
     }
 }

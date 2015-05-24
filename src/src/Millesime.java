@@ -41,6 +41,9 @@ public class Millesime
     public static List<String> getAvailableMillesimes()
     {
         List<String> millesimes = new ArrayList<>();
+        millesimes.add("1956");
+        millesimes.add("1962");
+        millesimes.add("1988");
         millesimes.add("1989");
         millesimes.add("1990");
         millesimes.add("1991");
