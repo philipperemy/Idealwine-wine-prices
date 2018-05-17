@@ -1,7 +1,11 @@
 import time
 
+import base64
 import json
 import os
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
@@ -21,30 +25,16 @@ def get_filename(millesime, wine_name, wine_id):
     return 'screenshots/{}.png'.format(photo_id)
 
 
-def get_fields(wine_id, wine_name, millesime, driver):
+def process_and_return_price(wine_id, wine_name, millesime, driver):
     url = forge_url(wine_id, wine_name, millesime)
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     wine_price = str([v for v in soup.find_all('a')
                       if 'Cliquer pour voir la cote' in str(v)][0].contents[0].contents[0]).strip()
-
-    # parker_rating = ''
-    # try:
-    #     if '(' in parker_rating:
-    #         if '+' in parker_rating:
-    #             # (92+)
-    #             parker_rating = str(int(parker_rating[1:-2]))
-    #         else:
-    #             # (89-92)
-    #             parker_rating = str(int(sum([int(e) for e in parker_rating[1:-1].split('-')]) / 2))
-    # except:
-    #     pass
     time.sleep(1)
-
-    bb2 = bytes(
-        driver.execute_script("return $('canvas')[0].toDataURL('image/png');").replace('data:image/png;base64,', ''),
-        encoding='utf-8')
-    import base64
+    canvas = driver.execute_script("return $('canvas')[0].toDataURL('image/png');")
+    canvas = canvas.replace('data:image/png;base64,', '')
+    bb2 = bytes(canvas, encoding='utf-8')
 
     if not os.path.exists('screenshots'):
         os.makedirs('screenshots')
@@ -53,9 +43,6 @@ def get_fields(wine_id, wine_name, millesime, driver):
     with open(input_filename, 'wb') as fh:
         fh.write(base64.decodebytes(bb2))
 
-    from PIL import Image
-    from PIL import ImageFont
-    from PIL import ImageDraw
     img = Image.open(input_filename)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype('Arial Unicode.ttf', 25)
@@ -89,16 +76,16 @@ def main():
     driver.find_element_by_id('s').send_keys('Chateau Haut Marbuzet')
     driver.find_element_by_id('searchbtn2').click()
 
-    with open('output.csv', 'a') as w:
+    with open('output.csv', 'a') as fp:
         for (technical_name, wine_id, wine_name) in WINES:
             for millesime in MILLESIMES:
                 while True:
                     if not os.path.isfile(get_filename(millesime, wine_name, wine_id)[:-4] + '_out.png'):
                         try:
-                            price = get_fields(wine_id, wine_name, millesime, driver)
+                            price = process_and_return_price(wine_id, wine_name, millesime, driver)
                             line = ', '.join([technical_name, str(millesime), price])
-                            w.write(line + '\n')
-                            w.flush()
+                            fp.write(line + '\n')
+                            fp.flush()
                             break
                         except IndexError:
                             print('Millesime {0} does not exist for wine {1}.'.format(millesime, technical_name))
