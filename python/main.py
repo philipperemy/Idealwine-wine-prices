@@ -52,7 +52,9 @@ def process_and_return_price(wine_id, wine_name, millesime, driver):
     print('-> wrote to {}'.format(output_filename))
     os.remove(input_filename)
 
-    assert os.path.getsize(output_filename) > 20000  # 20k is blank image.
+    if os.path.getsize(output_filename) < 20000:  # 20k is blank image.
+        os.remove(output_filename)
+        raise FileNotFoundError()
 
     # time.sleep(1)
     # driver.execute_script("window.history.back();")
@@ -93,7 +95,7 @@ def main():
                         except TimeoutException:
                             print('TimeOut exception occurred. Resuming.')
                             time.sleep(10)
-                        except AssertionError:
+                        except FileNotFoundError:
                             print('Blank page detected. Retrying after 60 seconds.')
                             time.sleep(60)
                     else:
