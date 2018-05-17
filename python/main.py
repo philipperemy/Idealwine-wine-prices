@@ -37,7 +37,7 @@ def get_fields(wine_id, wine_name, millesime, driver):
     #             parker_rating = str(int(sum([int(e) for e in parker_rating[1:-1].split('-')]) / 2))
     # except:
     #     pass
-    time.sleep(1)
+    time.sleep(5)
 
     bb2 = bytes(
         driver.execute_script("return $('canvas')[0].toDataURL('image/png');").replace('data:image/png;base64,', ''),
