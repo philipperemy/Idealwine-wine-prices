@@ -15,11 +15,13 @@ def forge_url(wine_id, wine_name, millesime):
 MILLESIMES = range(1982, 2018)
 WINES = json.load(open('wines.json', 'r'))
 
-count = 0
+
+def get_filename(millesime, wine_name, wine_id):
+    photo_id = '{}_{}_{}'.format(millesime, wine_name, wine_id)
+    return 'screenshots/{}.png'.format(photo_id)
 
 
 def get_fields(wine_id, wine_name, millesime, driver):
-    global count
     url = forge_url(wine_id, wine_name, millesime)
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -47,10 +49,7 @@ def get_fields(wine_id, wine_name, millesime, driver):
     if not os.path.exists('screenshots'):
         os.makedirs('screenshots')
 
-    photo_id = '{}_{}_{}'.format(millesime, wine_name, wine_id)
-    input_filename = 'screenshots/{}_{}.png'.format(count, photo_id)
-    count += 1
-
+    input_filename = get_filename(millesime, wine_name, wine_id)
     with open(input_filename, 'wb') as fh:
         fh.write(base64.decodebytes(bb2))
 
@@ -65,6 +64,8 @@ def get_fields(wine_id, wine_name, millesime, driver):
     img.save(output_filename)
     print('-> wrote to {}'.format(output_filename))
     os.remove(input_filename)
+
+    assert os.path.getsize(output_filename) > 20000  # 20k is blank image.
 
     # time.sleep(1)
     # driver.execute_script("window.history.back();")
@@ -88,25 +89,29 @@ def main():
     driver.find_element_by_id('s').send_keys('Chateau Haut Marbuzet')
     driver.find_element_by_id('searchbtn2').click()
 
-    write_mode = 'w' if count == 0 else 'a'
-    with open('output.csv', write_mode) as w:
-        w.write('\ntechnical_name, millesime, price\n')
+    with open('output.csv', 'a') as w:
         for (technical_name, wine_id, wine_name) in WINES:
             for millesime in MILLESIMES:
                 while True:
-                    try:
-                        price = get_fields(wine_id, wine_name, millesime, driver)
-                        line = ', '.join([technical_name, str(millesime), price])
-                        w.write(line + '\n')
-                        w.flush()
+                    if not os.path.isfile(get_filename(millesime, wine_name, wine_id)[:-4] + '_out.png'):
+                        try:
+                            price = get_fields(wine_id, wine_name, millesime, driver)
+                            line = ', '.join([technical_name, str(millesime), price])
+                            w.write(line + '\n')
+                            w.flush()
+                            break
+                        except IndexError:
+                            print('Millesime {0} does not exist for wine {1}.'.format(millesime, technical_name))
+                            break
+                        except TimeoutException:
+                            print('TimeOut exception occurred. Resuming.')
+                            time.sleep(10)
+                        except AssertionError:
+                            print('Blank page detected. Retrying after 60 seconds.')
+                            time.sleep(60)
+                    else:
+                        print('Already there: {} {}.'.format(wine_id, wine_name))
                         break
-                    except IndexError:
-                        print('Millesime {0} does not exist for wine {1}.'.format(millesime, technical_name))
-                        break
-                    except TimeoutException:
-                        print('TimeOut exception occurred. Resuming.')
-                        time.sleep(10)
-                        # looping only here.
 
     driver.quit()
 
