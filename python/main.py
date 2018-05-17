@@ -44,6 +44,9 @@ def get_fields(wine_id, wine_name, millesime, driver):
         encoding='utf-8')
     import base64
 
+    if not os.path.exists('screenshots'):
+        os.makedirs('screenshots')
+
     photo_id = '{}_{}_{}'.format(millesime, wine_name, wine_id)
     input_filename = 'screenshots/{}_{}.png'.format(count, photo_id)
     count += 1
