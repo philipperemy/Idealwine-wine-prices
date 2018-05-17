@@ -31,7 +31,7 @@ def process_and_return_price(wine_id, wine_name, millesime, driver):
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     wine_price = str([v for v in soup.find_all('a')
                       if 'Cliquer pour voir la cote' in str(v)][0].contents[0].contents[0]).strip()
-    time.sleep(1)
+    time.sleep(3)
     canvas = driver.execute_script("return $('canvas')[0].toDataURL('image/png');")
     canvas = canvas.replace('data:image/png;base64,', '')
     bb2 = bytes(canvas, encoding='utf-8')
@@ -82,7 +82,8 @@ def main():
         for (technical_name, wine_id, wine_name) in WINES:
             for millesime in MILLESIMES:
                 while True:
-                    if not os.path.isfile(get_filename(millesime, wine_name, wine_id)[:-4] + '_out.png'):
+                    output_filename = get_filename(millesime, wine_name, wine_id)[:-4] + '_out.png'
+                    if not os.path.isfile(output_filename):
                         try:
                             price = process_and_return_price(wine_id, wine_name, millesime, driver)
                             line = ', '.join([technical_name, str(millesime), price])
@@ -99,7 +100,7 @@ def main():
                             print('Blank page detected. Retrying after 60 seconds.')
                             time.sleep(60)
                     else:
-                        print('Already there: {} {}.'.format(wine_id, wine_name))
+                        print('Already there: {}.'.format(output_filename))
                         break
 
     driver.quit()
