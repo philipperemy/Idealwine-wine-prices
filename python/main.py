@@ -3,6 +3,7 @@ import time
 import base64
 import json
 import os
+import random
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -16,7 +17,7 @@ def forge_url(wine_id, wine_name, millesime):
     return url
 
 
-MILLESIMES = range(1982, 2018)
+MILLESIMES = list(range(1982, 2018))
 WINES = json.load(open('wines.json', 'r'))
 
 
@@ -31,7 +32,9 @@ def process_and_return_price(wine_id, wine_name, millesime, driver):
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     wine_price = str([v for v in soup.find_all('a')
                       if 'Cliquer pour voir la cote' in str(v)][0].contents[0].contents[0]).strip()
-    time.sleep(3)
+    time.sleep(1)
+    driver.execute_script("window.scrollTo(0, 100000)")
+    time.sleep(1)
     canvas = driver.execute_script("return $('canvas')[0].toDataURL('image/png');")
     canvas = canvas.replace('data:image/png;base64,', '')
     bb2 = bytes(canvas, encoding='utf-8')
@@ -49,7 +52,7 @@ def process_and_return_price(wine_id, wine_name, millesime, driver):
     draw.text((50, 50), '{}_{}'.format(millesime, wine_name), (255, 0, 0), font=font)
     output_filename = input_filename.split('.')[0] + '_out.' + input_filename.split('.')[1]
     img.save(output_filename)
-    print('-> wrote to {}'.format(output_filename))
+    print('-> wrote to {}.'.format(output_filename))
     os.remove(input_filename)
 
     if os.path.getsize(output_filename) < 20000:  # 20k is blank image.
@@ -78,9 +81,13 @@ def main():
     driver.find_element_by_id('s').send_keys('Chateau Haut Marbuzet')
     driver.find_element_by_id('searchbtn2').click()
 
+    random.seed(2)
+    random.shuffle(MILLESIMES)
+    random.shuffle(WINES)
+
     with open('output.csv', 'a') as fp:
-        for (technical_name, wine_id, wine_name) in WINES:
-            for millesime in MILLESIMES:
+        for millesime in MILLESIMES:
+            for (technical_name, wine_id, wine_name) in WINES:
                 while True:
                     output_filename = get_filename(millesime, wine_name, wine_id)[:-4] + '_out.png'
                     if not os.path.isfile(output_filename):
@@ -97,8 +104,8 @@ def main():
                             print('TimeOut exception occurred. Resuming.')
                             time.sleep(10)
                         except FileNotFoundError:
-                            print('Blank page detected. Retrying after 60 seconds.')
-                            time.sleep(60)
+                            print('Blank page detected. Retrying after 5 seconds.')
+                            time.sleep(5)
                     else:
                         print('Already there: {}.'.format(output_filename))
                         break
