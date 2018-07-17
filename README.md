@@ -4,6 +4,8 @@ Simple tool to retrieve average prices from daily wine auctions
 
 ## Get Started
 
+Beforehand, create an account on the platform. Note down the user and password as you will need them later.
+
 ```
 git clone git@github.com:philipperemy/Idealwine-API.git
 cd Idealwine-API/python
