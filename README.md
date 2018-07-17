@@ -1,6 +1,6 @@
-# Idealwine API (retrieve wine quotations)
+# Retrieve wine prices from Idealwine
 
-API to retrieve quotes from daily wine auctions
+Simple tool to retrieve average prices from daily wine auctions
 
 ## Get Started
 
@@ -22,7 +22,7 @@ export IDEALWINE_USER=<MY_USER>; export IDEALWINE_PASS=<MY_PASS>; python main.py
 
 All the screenshots will be available in the folder `screenshots`.
 
-## Example of output
+## Output Example
 
 <p align="center">
   <img src="assets/1983_Bordeaux-Saint-Emilion-Chateau-Pavie-1er-Grand-Cru-Classe-A-Rouge_527_out.png" width="500">
