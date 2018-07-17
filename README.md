@@ -26,5 +26,5 @@ All the screenshots will be available in the folder `screenshots`.
 
 <p align="center">
   <img src="assets/1983_Bordeaux-Saint-Emilion-Chateau-Pavie-1er-Grand-Cru-Classe-A-Rouge_527_out.png" width="500">
-  <br><i>Example: Quotations of Chateau Pavie 1er Grand Cru Classee 1983 indexed by time</i>
+  <br><i>Example: Quotations of Chateau Pavie 1er Grand Cru Classee 1983 indexed by time. Y-axis unit is EUR.</i>
 </p>
