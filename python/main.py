@@ -143,6 +143,7 @@ def main():
 
                         if waiting_time_multiplier >= 32:
                             logger.error('Could not get it after a while. Giving up.')
+                            wine_processing_list.remove((millesime, technical_name, wine_id, wine_name))
                             break
 
                         time.sleep(5)
