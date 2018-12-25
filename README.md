@@ -24,7 +24,7 @@ export IDEALWINE_USER=<MY_USER>; export IDEALWINE_PASS=<MY_PASS>; python main.py
 
 All the screenshots will be available in the folder `screenshots`. A summary containing all the prices will be dumped in `output.csv`.
 
-## Output Example
+## Screenshot Example
 
 <p align="center">
   <img src="assets/1983_Bordeaux-Saint-Emilion-Chateau-Pavie-1er-Grand-Cru-Classe-A-Rouge_527_out.png" width="500">
