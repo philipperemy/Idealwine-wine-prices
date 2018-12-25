@@ -92,16 +92,18 @@ def get_wine_processing_list():
 
 
 def main():
-    driver = webdriver.Chrome('/usr/local/bin/chromedriver')
+    print('Initialization of Chrome...')
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    driver = webdriver.Chrome(executable_path='/usr/local/bin/chromedriver', options=options)
     driver.get('https://www.idealwine.com/fr/my_idealwine/login.jsp?dest=fr/my_idealwine/accueil_profil.jsp')
-    time.sleep(1)
+    driver.implicitly_wait(10)
+    print('Initialization done...')
     driver.find_element_by_id('ident').send_keys(os.environ['IDEALWINE_USER'])
-    time.sleep(1)
     driver.find_element_by_id('pswd').send_keys(os.environ['IDEALWINE_PASS'])
-    time.sleep(1)
     driver.find_element_by_name('ok').click()
-    time.sleep(1)
 
+    print('Scraping has started...')
     driver.get('https://www.idealwine.com/fr/cote.jsp')
 
     driver.find_element_by_id('s').send_keys('Chateau Haut Marbuzet')
@@ -146,7 +148,7 @@ def main():
                             wine_processing_list.remove((millesime, technical_name, wine_id, wine_name))
                             break
 
-                        time.sleep(5)
+                        time.sleep(1)
                 else:
                     logger.info('Already there: {}.'.format(output_filename))
                     wine_processing_list.remove((millesime, technical_name, wine_id, wine_name))
