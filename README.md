@@ -1,6 +1,6 @@
-# Retrieve wine prices from Idealwine.com (python)
+# Price Scraper Tool - Idealwine.com (python)
 
-Simple tool to retrieve average prices from daily wine auctions
+*Ready to use tool to retrieve average prices from daily wine auctions.*
 
 ## Get Started
 
