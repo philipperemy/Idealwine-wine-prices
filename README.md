@@ -22,7 +22,7 @@ pip install -r requirements.txt
 export IDEALWINE_USER=<MY_USER>; export IDEALWINE_PASS=<MY_PASS>; python main.py
 ```
 
-All the screenshots will be available in the folder `screenshots`.
+All the screenshots will be available in the folder `screenshots`. A summary containing all the prices will be dumped in `output.csv`.
 
 ## Output Example
 
