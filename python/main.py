@@ -95,7 +95,7 @@ def main():
     print('Initialization of Chrome...')
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
-    driver = webdriver.Chrome(executable_path='/usr/local/bin/chromedriver', options=options)
+    driver = webdriver.Chrome(executable_path='chromedriver', options=options)
     driver.get('https://www.idealwine.com/fr/my_idealwine/login.jsp?dest=fr/my_idealwine/accueil_profil.jsp')
     driver.implicitly_wait(10)
     print('Initialization done...')
