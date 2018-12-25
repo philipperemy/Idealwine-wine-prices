@@ -1,4 +1,4 @@
-# Retrieve wine prices from Idealwine (python)
+# Retrieve wine prices from Idealwine.com (python)
 
 Simple tool to retrieve average prices from daily wine auctions
 
